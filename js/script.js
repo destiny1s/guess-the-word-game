@@ -43,14 +43,14 @@ guessLetterButton.addEventListener("click", function (e) {
 
     //Validate Input in the Button Event Handler
     const goodGuess = validateInput(guess);
-    console.log(goodGuess);
+   
 
     if (goodGuess) {
         makeGuess(guess);
     }
 });
 
-//*Create a function to check player's input*//
+//*Create a function to send a message based on player's input*//
 const validateInput = function (input) {
     const acceptedLetter = /[a-zA-Z]/;
     if (input.length === 0) {
@@ -76,5 +76,43 @@ const makeGuess = function (guess) {
     } else {
         guessedLetters.push(guess);
         console.log(guessedLetters);
+        showGuessedLetters();
+        updateWordInProgress(guessedLetters);
+    }
+};
+
+//*Create a function to show the guessed letters*//
+const showGuessedLetters = function () {
+    guessedLettersElement.innerHTML = "";
+
+    for (const letter of guessedLetters) {
+        const li = document.createElement("li");
+        li.innerText = letter;
+        guessedLettersElement.append(li);
+    }
+};
+
+//*Create a function to update the word in progress*//
+const updateWordInProgress = function (guessedLetters) {
+    const wordUpper = word.toUpperCase();
+    const wordArray = wordUpper.split("");
+    const revealWord = [];
+
+    for (const letter of wordArray) {
+        if (guessedLetters.includes(letter)) {
+            revealWord.push(letter.toUpperCase());
+        } else {
+            revealWord.push("●");
+        }
+    }
+    wordInProgress.innerText = revealWord.join("");
+    checkIfWon();
+};
+
+//*Create a Function to Check If the Player Won*//
+const checkIfWon = function () {
+    if (wordInProgress.innerText === word.toUpperCase()) {
+        message.classList.add("win");
+        message.innerHTML = `<p class="highlight">You guessed the correct word! Congrats!</p>`;
     }
 };
